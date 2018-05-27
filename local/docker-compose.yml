@@ -1,0 +1,11 @@
+---
+version: '2'
+services:
+  nginx:
+    build: image_nginx
+    restart: unless-stopped
+    volumes:
+      - ../game/source/:/usr/share/nginx/html/
+    network_mode: host
+    ports:
+      - '0.0.0.0:7443:443'

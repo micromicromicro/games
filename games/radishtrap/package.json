@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "parcel-bundler": "^1.7.0",
+    "typescript": "^2.8.1"
+  },
+  "dependencies": {
+    "@types/pixi.js": "^4.7.2",
+    "babel-polyfill": "^6.26.0",
+    "pixi.js": "^4.7.3",
+    "qrcode-generator-es6": "^1.1.3"
+  }
+}

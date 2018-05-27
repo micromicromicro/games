@@ -1,0 +1,93 @@
+{"frames": {
+
+"bigjelly0000":
+{
+	"frame": {"x":83,"y":1,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bigjelly0001":
+{
+	"frame": {"x":65,"y":65,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bigjelly0002":
+{
+	"frame": {"x":1,"y":65,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bigjelly0003":
+{
+	"frame": {"x":129,"y":65,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bigleg":
+{
+	"frame": {"x":1,"y":129,"w":128,"h":4},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":4},
+	"sourceSize": {"w":128,"h":4},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"guppy":
+{
+	"frame": {"x":1,"y":1,"w":10,"h":6},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":6},
+	"sourceSize": {"w":10,"h":6},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"jelly":
+{
+	"frame": {"x":29,"y":1,"w":22,"h":22},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":22},
+	"sourceSize": {"w":22,"h":22},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"minnow":
+{
+	"frame": {"x":11,"y":1,"w":18,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":10},
+	"sourceSize": {"w":18,"h":10},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"smallleg":
+{
+	"frame": {"x":51,"y":1,"w":32,"h":1},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":1},
+	"sourceSize": {"w":32,"h":1},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":194,"h":134},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d857e008d05ead5a83a5e72963f5b5da:0c29578c7c7ab44a5d46cecf7866575f:1eabdf11f75e3a4fe3147baf7b5be24b$"
+}
+}
