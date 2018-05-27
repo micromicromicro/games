@@ -6,6 +6,7 @@
   "dependencies": {
     "@types/pixi.js": "^4.7.2",
     "babel-polyfill": "^6.26.0",
+    "micromicroqr": "github:micromicromicro/micromicroqr#8821e99802e0a141dbe405a295eecfcd548aa9d3",
     "pixi.js": "^4.7.3",
     "qrcode-generator-es6": "^1.1.3"
   }

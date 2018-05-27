@@ -146,8 +146,6 @@ export abstract class SimLayer extends Layer {
       }()
     );
 
-    this.adjustRooms(map.start);
-
     this.graphics.addChild(this.bg.graphics);
     this.graphics.addChild(this.world);
   }
@@ -253,6 +251,7 @@ export abstract class SimLayer extends Layer {
   abstract createLife(r: Room, v: V);
   abstract center(): V;
   abstract getPlayer(): PhysCirc<SimLayer>;
+  abstract clearPlayer();
 
   update(delta: number) {
     const now = Date.now();

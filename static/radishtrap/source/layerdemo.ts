@@ -10,6 +10,7 @@ const demoCenter = new V().set(200, 200);
 export class DemoLayer extends SimLayer {
   constructor() {
     super({ map: demoMapData, settSpawn: false, settFadeByDistance: false });
+    this.adjustRooms(this.mapData.start);
     const allSpawns: Array<[Room, V]> = [];
     this.rooms.forEach((r, k) =>
       this.mapData.rooms[k.toString()].spawns.forEach(s =>
@@ -40,4 +41,6 @@ export class DemoLayer extends SimLayer {
   getPlayer() {
     return null;
   }
+
+  clearPlayer() {}
 }

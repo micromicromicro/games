@@ -4,7 +4,7 @@ import * as pixi from "pixi.js";
 import { myWs, AsyncWebsockets } from "./ws";
 import { imgElement as qrMicroImgElement } from "micromicroqr";
 import { Layer } from "./layer";
-import { app, key_enter, key_escape } from "./globals";
+import { app, key_enter, key_escape, set_do_game_over } from "./globals";
 import {
   rgb2num,
   createText,
@@ -88,7 +88,7 @@ class TitleLayer extends Layer {
   constructor(bg: Layer) {
     super();
     const title = createHeadText("RADISH TRAP");
-    title.position.set(50, 10);
+    title.position.set(Math.min(50, title.position.x), 10);
     this.graphics.addChild(title);
     const price = createText("10¢ per play", 28);
     price.position.set(50, 70);
@@ -137,7 +137,7 @@ class CoinLayer extends Layer {
       }
     })();
     const title = createHeadText(diff == 0 ? "NORMAL" : "KIND OF HARD");
-    title.position.set(50, 50);
+    title.position.set(Math.min(50, title.position.x), 50);
     this.graphics.addChild(title);
     const note = createNoteText("Play for 10¢ via micromicro");
     note.position.set(50, 110);
@@ -187,7 +187,7 @@ class GoLayer extends Layer {
     this.diff = diff;
     this.bg = bg;
     const title = createHeadText("ARE YOU READY!");
-    title.position.set(50, 50);
+    title.position.set(Math.min(50, title.position.x), 50);
     this.graphics.addChild(title);
     this.graphics.addChild(
       createButtons(["NO", () => this.back()], ["GO", () => this.go()])
@@ -269,6 +269,10 @@ const removeLayer = (l: Layer) => {
   app.stage.removeChild(l.graphics);
   layers.splice(layers.indexOf(l), 1);
 };
+
+set_do_game_over((context: any, diff: number, score: number) => {
+  addLayer(new GameOverLayer(<GameLayer>context, diff, score));
+});
 
 const main = () => {
   setGuppyTexture(PIXI.Texture.fromFrame("guppy"));

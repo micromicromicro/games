@@ -1,8 +1,16 @@
 import * as pixi from "pixi.js";
 import { PhysCirc, PhysWall } from "./physics";
-import { app, key_down, key_left, key_right, key_up, touches } from "./globals";
+import {
+  app,
+  key_down,
+  key_left,
+  key_right,
+  key_up,
+  touches,
+  do_game_over
+} from "./globals";
 import { V, v0, vpool } from "./math";
-import { SimLayer, Entity, rotateToPhys } from "./layersim";
+import { SimLayer, Entity, rotateToPhys, Room } from "./layersim";
 
 export class Player extends Entity {
   shape: pixi.Graphics;
@@ -26,13 +34,11 @@ export class Player extends Entity {
     const this1 = this;
     this.phys.listener = new class {
       handle(context: SimLayer, other: any): boolean {
-        if (context.player == null) return false;
+        if (context.getPlayer() == null) return false;
         if (this1.diff >= 1 || !(other instanceof PhysWall)) {
-          addLayer(
-            new GameOverLayer(<GameLayer>context, this1.diff, this1.score)
-          );
+          do_game_over(context, this1.diff, this1.score);
           this1.destroy(context);
-          context.player = null;
+          context.clearPlayer();
           return true;
         }
       }

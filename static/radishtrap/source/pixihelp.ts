@@ -1,5 +1,6 @@
 import * as pixi from "pixi.js";
 import { pmod } from "./help";
+import { app } from "./globals";
 
 export const rgb2num = (r: number, g: number, b: number): number => {
   return pixi.utils.rgb2hex([r, g, b]);
@@ -41,7 +42,9 @@ export const createText = (text: string, size: number) => {
 };
 
 export const createHeadText = (text: string) => {
-  return createText(text, 45);
+  const out = createText(text, 45);
+  out.position.x = app.renderer.width / 2 - out.width / 2;
+  return out;
 };
 
 export const createNoteText = (text: string) => {

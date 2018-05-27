@@ -67,3 +67,20 @@ const pointerup = (e: pixi.interaction.InteractionEvent) => {
 };
 app.stage.on("pointerup", pointerup);
 app.stage.on("pointerupoutside", pointerup);
+
+type game_over_f_type = (
+  context: any /* SimLayer */,
+  diff: number,
+  score: number
+) => void;
+let game_over_f: game_over_f_type = null;
+export const set_do_game_over = (f: game_over_f_type) => {
+  game_over_f = f;
+};
+export const do_game_over = (
+  context: any /* SimLayer */,
+  diff: number,
+  score: number
+) => {
+  game_over_f(context, diff, score);
+};

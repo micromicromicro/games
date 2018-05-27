@@ -13,11 +13,15 @@ import { Jellyfish, BigJellyfish } from "./entityjellies";
 export class GameLayer extends SimLayer {
   scoreboard: pixi.Text;
   player: Player;
+  center_: V = new V();
+
   constructor(diff: number) {
     super({ map: levelMapData, settFadeByDistance: true });
     this.player = new Player(this, diff);
+    this.adjustRooms(this.mapData.start);
     const startRoom = this.rooms.get(this.mapData.start);
     this.player.phys.position.setv(roomCenter(startRoom));
+    this.center_.setv(this.player.phys.position.c());
     this.player.phys.room = startRoom.phys;
     this.addEntity(this.player);
     this.scoreboard = createText("", 20);
@@ -34,6 +38,7 @@ export class GameLayer extends SimLayer {
         this.scoreboard = null;
       }
     } else {
+      this.center_.setv(this.player.phys.position.c());
       this.scoreboard.text = "" + Math.floor(this.player.score);
       this.scoreboard.position.set(
         app.renderer.width - this.scoreboard.width - 10,
@@ -98,11 +103,15 @@ export class GameLayer extends SimLayer {
   }
 
   center() {
-    return this.player.phys.position;
+    return this.center_;
   }
 
   getPlayer() {
     if (!this.player) return null;
     return this.player.phys;
+  }
+
+  clearPlayer() {
+    this.player = null;
   }
 }
