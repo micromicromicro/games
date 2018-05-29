@@ -1,5 +1,6 @@
-from node:9.11.1-alpine
-add source/bundle.js .
-cmd ["node", "bundle.js"]
+from node:9.11.1
+add . .
+run npm install
+cmd ["node", "source/index.js"]
 expose 8080
 env PORT=8080
