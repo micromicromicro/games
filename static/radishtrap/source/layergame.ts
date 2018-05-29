@@ -38,7 +38,6 @@ export class GameLayer extends SimLayer {
         this.scoreboard = null;
       }
     } else {
-      this.center_.setv(this.player.phys.position.c());
       this.scoreboard.text = "" + Math.floor(this.player.score);
       this.scoreboard.position.set(
         app.renderer.width - this.scoreboard.width - 10,
@@ -103,6 +102,9 @@ export class GameLayer extends SimLayer {
   }
 
   center() {
+    if (this.player != null) {
+      this.center_.setv(this.player.phys.position.c());
+    }
     return this.center_;
   }
 

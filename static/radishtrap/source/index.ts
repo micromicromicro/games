@@ -157,7 +157,7 @@ class CoinLayer extends Layer {
     this.graphics.addChild(note);
     this.graphics.addChild(createButtons(["< Back", () => this.back()], null));
     this.addrBox = new pixi.Container();
-    this.addrBox.position.set(40, 140);
+    this.addrBox.position.set(app.renderer.width / 2, 140);
     const white = new pixi.Graphics();
     white.beginFill(rgb2num(1, 1, 1), 0.8);
     white.drawRect(0, 0, 400, 400);
@@ -184,7 +184,7 @@ class CoinLayer extends Layer {
         const sprite = pixi.Sprite.from(qr);
         sprite.width = 380;
         sprite.height = 380;
-        sprite.position.set(10, 10);
+        sprite.position.set(-sprite.width / 2, 10);
         this.addrBox.addChild(sprite);
         this.addrBody = null;
       });

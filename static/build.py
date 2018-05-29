@@ -4,6 +4,7 @@ import os.path
 import subprocess
 import shutil
 
+shutil.rmtree('built', ignore_errors=True)
 os.makedirs('built', exist_ok=True)
 
 for game in ['radishtrap']:

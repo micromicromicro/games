@@ -1,4 +1,4 @@
-from node:9.11.1
+from node:9.11.1-alpine
 add . .
 run npm install
 cmd ["node", "source/index.js"]

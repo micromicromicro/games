@@ -3,6 +3,10 @@ import * as http from "http";
 import * as process from "process";
 import fetch from "node-fetch";
 
+process.on("uncaughtException", function(error: Error) {
+  console.error(error.stack);
+});
+
 const port = parseInt(process.env.PORT);
 const env_origin = process.env.ORIGIN;
 const env_auth = process.env.AUTH;
@@ -48,7 +52,7 @@ const asafe = async (inner: () => Promise<any>) => {
   try {
     return await inner();
   } catch (e) {
-    console.log("ERROR: " + e.message);
+    console.error(e.stack);
   }
 };
 
