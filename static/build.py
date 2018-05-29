@@ -10,6 +10,7 @@ os.makedirs('built', exist_ok=True)
 for game in ['radishtrap']:
     os.chdir(game)
     subprocess.check_call(['npm', 'install'])
+    shutil.rmtree('dist', ignore_errors=True)
     subprocess.check_call([
         './node_modules/.bin/parcel', 'build',
         '--no-source-maps',

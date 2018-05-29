@@ -1,3 +1,4 @@
+// nop 0
 import { server as WSS, connection as WSConnection } from "websocket";
 import * as http from "http";
 import * as process from "process";
@@ -44,7 +45,7 @@ const safe = (inner: any) => {
   try {
     return inner();
   } catch (e) {
-    console.log(e.message);
+    console.log(e.stack);
   }
 };
 
@@ -71,7 +72,7 @@ setInterval(updateRates, 24 * 60 * 60 * 1000);
 var httpServer = http.createServer((request, response) =>
   asafe(async () => {
     if (request.url.endsWith("/health")) {
-      response.write(200);
+      response.writeHead(200);
       response.write("salut");
       response.end();
       return;
