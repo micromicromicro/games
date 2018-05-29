@@ -2,4 +2,4 @@
 import subprocess
 
 subprocess.check_call(['npm', 'install'])
-subprocess.check_call(['./node_modules/.bin/tsc'])
+subprocess.check_call(['./node_modules/.bin/tsc', '--out', 'bundle.js'])
