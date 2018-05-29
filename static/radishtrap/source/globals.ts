@@ -2,6 +2,8 @@ import * as pixi from "pixi.js";
 import { hsv2rgb } from "./pixihelp";
 import { V } from "./math";
 
+export const nocoin = document.location.hash == "l1x4n";
+
 export let app: PIXI.Application;
 {
   const body = document.getElementsByTagName("body").item(0);

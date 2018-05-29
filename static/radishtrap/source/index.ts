@@ -4,7 +4,13 @@ import * as pixi from "pixi.js";
 import { myWs, AsyncWebsockets } from "./ws";
 import { imgElement as qrMicroImgElement } from "micromicroqr";
 import { Layer } from "./layer";
-import { app, key_enter, key_escape, set_do_game_over } from "./globals";
+import {
+  app,
+  key_enter,
+  key_escape,
+  set_do_game_over,
+  nocoin
+} from "./globals";
 import {
   rgb2num,
   createText,
@@ -98,16 +104,22 @@ class TitleLayer extends Layer {
         "kind of hard",
         () => {
           removeLayer(this);
-          //addLayer(new CoinLayer(1, bg));
-          addLayer(new GoLayer(1, bg));
+          if (nocoin) {
+            addLayer(new GoLayer(1, bg));
+          } else {
+            addLayer(new CoinLayer(1, bg));
+          }
         }
       ],
       [
         "normal",
         () => {
           removeLayer(this);
-          //addLayer(new CoinLayer(0, bg));
-          addLayer(new GoLayer(0, bg));
+          if (nocoin) {
+            addLayer(new GoLayer(0, bg));
+          } else {
+            addLayer(new CoinLayer(0, bg));
+          }
         }
       ]
     );
@@ -119,6 +131,7 @@ class CoinLayer extends Layer {
   addrBody: any = null;
   addrBox: pixi.Container;
   bg: Layer;
+
   constructor(diff: number, bg: Layer) {
     super();
     this.bg = bg;
@@ -238,6 +251,7 @@ class GameOverLayer extends Layer {
     );
     this.graphics.addChild(buttons);
   }
+
   back() {
     removeLayer(this.bg);
     removeLayer(this);
@@ -245,13 +259,19 @@ class GameOverLayer extends Layer {
     addLayer(demoLayer);
     addLayer(new TitleLayer(demoLayer));
   }
+
   go() {
     removeLayer(this.bg);
     removeLayer(this);
     const demoLayer = new DemoLayer();
     addLayer(demoLayer);
-    addLayer(new GoLayer(this.diff, demoLayer));
+    if (nocoin) {
+      addLayer(new GoLayer(this.diff, demoLayer));
+    } else {
+      addLayer(new CoinLayer(this.diff, demoLayer));
+    }
   }
+
   update(delta: number) {
     if (key_enter()) this.go();
     else if (key_escape()) this.back();

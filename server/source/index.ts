@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 const port = parseInt(process.env.PORT);
 const env_origin = process.env.ORIGIN;
 const env_auth = process.env.AUTH;
+const env_micro_host = process.env.MICROMICRO_HOST;
 const env_micro_user = process.env.MICROMICRO_USER;
 const env_micro_token = process.env.MICROMICRO_TOKEN;
 
@@ -54,7 +55,7 @@ const asafe = async (inner: () => Promise<any>) => {
 const updateRates = async () =>
   asafe(async () => {
     const rates = await (await fetch(
-      "https://api.development.micromicro.cash/v1/rates"
+      "https://api." + env_micro_host + "/v1/rates"
     )).json();
     rate = rates["usd"];
     console.log("rate " + rate);
@@ -65,6 +66,12 @@ setInterval(updateRates, 24 * 60 * 60 * 1000);
 
 var httpServer = http.createServer((request, response) =>
   asafe(async () => {
+    if (request.url.endsWith("/health")) {
+      response.write(200);
+      response.write("salut");
+      response.end();
+      return;
+    }
     if (!request.url.endsWith("/" + env_auth)) {
       response.writeHead(400);
       response.end();
@@ -131,7 +138,7 @@ wsServer.on("request", request => {
       }
       const reqid = (++reqidCounter).toFixed(0);
       const addr = await (await fetch(
-        "https://api.development.micromicro.cash/v1/new_in",
+        "https://api." + env_micro_host + "/v1/new_in",
         {
           method: "POST",
           body: JSON.stringify({
@@ -156,7 +163,7 @@ wsServer.on("request", request => {
       tokens.set(reqid, new Token(connection));
       connection.sendUTF(
         JSON.stringify({
-          address: "https://development.micromicro.cash/app/#in/" + addr.id
+          address: "https://" + env_micro_host + "/app/#in/" + addr.id
         })
       );
     } catch (e) {
