@@ -9,6 +9,7 @@ import { Player } from "./player";
 import { Guppy } from "./entityguppy";
 import { Minnow } from "./entityminnow";
 import { Jellyfish, BigJellyfish } from "./entityjellies";
+import { Star } from "./entitystar";
 
 export class GameLayer extends SimLayer {
   scoreboard: pixi.Text;
@@ -73,6 +74,17 @@ export class GameLayer extends SimLayer {
     let score = randRange(0, distance);
     let mine: Entity;
     do {
+      if (
+        (score -=
+          20 *
+          Math.pow(
+            Math.max(Math.cos((distance + 1.5) / 20 * 2 * Math.PI), 0),
+            2
+          )) < 0
+      ) {
+        mine = new Star(diff);
+        break;
+      }
       if ((score -= 20) < 0) {
         mine = new Guppy(diff);
         break;

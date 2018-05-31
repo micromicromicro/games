@@ -4,6 +4,7 @@ import { map as demoMapData } from "./demo";
 import { V, vpool, v0 } from "./math";
 import { randChoose } from "./help";
 import { Guppy } from "./entityguppy";
+import { Star } from "./entitystar";
 
 const demoCenter = new V().set(200, 200);
 

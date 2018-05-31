@@ -189,7 +189,7 @@ export class BigJellyfish extends AIEntity {
     this.sprite = new PIXI.extras.AnimatedSprite(bigJellyFrames);
     this.sprite.scale.y = randChoose([1, -1]);
     this.sprite.anchor.set(0.5, 0.5);
-    this.sprite.animationSpeed = 0.03;
+    this.sprite.animationSpeed = 0.06;
     this.sprite.loop = false;
     this.graphics.addChild(this.sprite);
   }

@@ -8,7 +8,7 @@ import { Layer } from "./layer";
 import { Background } from "./background";
 import { roomType, mapType } from "./maptype";
 
-export class Entity {
+export abstract class Entity {
   phys: PhysCirc<SimLayer>;
   graphics: pixi.Container = new pixi.Container();
   aiNextUpdate: number;

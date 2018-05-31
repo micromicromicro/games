@@ -2,7 +2,7 @@ import * as pixi from "pixi.js";
 import { hsv2rgb } from "./pixihelp";
 import { V } from "./math";
 
-export const nocoin = document.location.hash == "#l1x4nn";
+export const nocoin = document.location.hash == "#l1x4nl";
 
 export let app: PIXI.Application;
 {

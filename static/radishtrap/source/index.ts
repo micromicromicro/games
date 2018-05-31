@@ -20,6 +20,7 @@ import {
 import { setGuppyTexture } from "./entityguppy";
 import { setMinnowTexture } from "./entityminnow";
 import { setJellyTextures } from "./entityjellies";
+import { setStarTextures } from "./entitystar";
 import { DemoLayer } from "./layerdemo";
 import { GameLayer } from "./layergame";
 
@@ -298,8 +299,12 @@ set_do_game_over((context: any, diff: number, score: number) => {
 const main = () => {
   setGuppyTexture(PIXI.Texture.fromFrame("guppy"));
   setMinnowTexture(PIXI.Texture.fromFrame("minnow"));
+  setStarTextures(
+    PIXI.Texture.fromFrame("stara"),
+    PIXI.Texture.fromFrame("starb")
+  );
   const bigJellyFrames = [];
-  for (let i = 0; i < 4; ++i) {
+  for (let i = 0; i < 8; ++i) {
     bigJellyFrames.push(PIXI.Texture.fromFrame("bigjelly000" + i));
   }
   setJellyTextures(
