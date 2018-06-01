@@ -55,7 +55,7 @@ export class Star extends AIEntity {
     this.phys.vel.setv(this.phys.vel.c().scale(0.9));
   }
 
-  update(delta: number) {
+  update(context: SimLayer, delta: number) {
     this.time += delta;
     if (this.time >= this.period) {
       this.time -= this.period;

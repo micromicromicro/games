@@ -26,6 +26,8 @@ import { GameLayer } from "./layergame";
 
 // Generate initial room
 
+const diffNames = ["normal", "kind of hard"];
+
 const createButtons = (
   left: [string, () => void],
   right: [string, () => void]
@@ -102,7 +104,7 @@ class TitleLayer extends Layer {
     this.graphics.addChild(price);
     const buttons = createButtons(
       [
-        "kind of hard",
+        diffNames[1],
         () => {
           removeLayer(this);
           if (nocoin) {
@@ -113,7 +115,7 @@ class TitleLayer extends Layer {
         }
       ],
       [
-        "normal",
+        diffNames[0],
         () => {
           removeLayer(this);
           if (nocoin) {
@@ -150,7 +152,7 @@ class CoinLayer extends Layer {
         console.log("Failed to get coin addr", e);
       }
     })();
-    const title = createHeadText(diff == 0 ? "NORMAL" : "KIND OF HARD");
+    const title = createHeadText(diffNames[diff].toUpperCase());
     title.position.set(Math.min(50, title.position.x), 50);
     this.graphics.addChild(title);
     const note = createNoteText("Play for 10¢ via micromicro");
@@ -230,6 +232,10 @@ class GameOverLayer extends Layer {
     super();
     this.bg = bg;
     this.diff = diff;
+
+    const diffLabel = createText(diffNames[diff], 28);
+    diffLabel.position.set(app.renderer.width / 2 - diffLabel.width / 2, 10);
+    this.graphics.addChild(diffLabel);
 
     const scoreBox = new pixi.Container();
     this.graphics.addChild(scoreBox);

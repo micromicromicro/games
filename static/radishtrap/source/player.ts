@@ -22,9 +22,12 @@ export class Player extends Entity {
   score = 0;
   distance = 0;
   time = 0;
+  distanceTime = 0;
+  maxDistanceTime: number;
 
   constructor(sim: SimLayer, diff: number) {
     super();
+    this.maxDistanceTime = diff == 0 ? Number.MAX_VALUE : 30;
     this.diff = diff;
     this.maxSpeed = 100;
     this.acc = 80;
@@ -46,6 +49,7 @@ export class Player extends Entity {
       changedRoom(context: SimLayer) {
         const room = <Room>this1.phys.room.data;
         if (room.data.distance > this1.distance) {
+          this1.distanceTime = 0;
           const timeFactor =
             1 -
             2 * Math.atan(this1.time / Math.max(1, this1.distance)) / Math.PI;
@@ -53,6 +57,12 @@ export class Player extends Entity {
           const adding = room.data.distance * distFactor * timeFactor * 1000;
           this1.score += adding;
           this1.distance = room.data.distance;
+          if (String(room.data.distance) == sim.mapData.endDist) {
+            do_game_over(context, this1.diff, this1.score);
+            this1.destroy(context);
+            context.clearPlayer();
+            return;
+          }
         }
         sim.adjustRooms(this1.phys.room.id);
       }
@@ -66,7 +76,14 @@ export class Player extends Entity {
     this.graphics.addChild(this.shape);
   }
 
-  update(delta: number) {
+  update(context: SimLayer, delta: number) {
+    this.distanceTime += delta;
+    if (this.distanceTime > this.maxDistanceTime) {
+      do_game_over(context, this.diff, this.score);
+      this.destroy(context);
+      context.clearPlayer();
+      return;
+    }
     this.time += delta;
     this.phys.acc.set(0, 0);
     let change = v0
@@ -100,5 +117,6 @@ export class Player extends Entity {
   postUpdate(delta: number) {
     this.graphics.position.set(this.phys.position.x, this.phys.position.y);
     rotateToPhys(this, this.graphics);
+    this.graphics.alpha = 1 - this.distanceTime / this.maxDistanceTime;
   }
 }

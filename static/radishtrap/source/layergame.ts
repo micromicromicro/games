@@ -3,7 +3,7 @@ import { SimLayer, Room, Entity, roomCenter } from "./layersim";
 import { map as levelMapData } from "./level";
 import { V, v0, vpool } from "./math";
 import { randChoose, randRange } from "./help";
-import { app } from "./globals";
+import { app, colorBg } from "./globals";
 import { createText } from "./pixihelp";
 import { Player } from "./player";
 import { Guppy } from "./entityguppy";
@@ -15,9 +15,12 @@ export class GameLayer extends SimLayer {
   scoreboard: pixi.Text;
   player: Player;
   center_: V = new V();
+  lastScore = -1;
+  scoreTime = 0;
 
   constructor(diff: number) {
     super({ map: levelMapData, settFadeByDistance: true });
+    colorBg(diff == 0 ? 245 : 260);
     this.player = new Player(this, diff);
     this.adjustRooms(this.mapData.start);
     const startRoom = this.rooms.get(this.mapData.start);
@@ -31,6 +34,7 @@ export class GameLayer extends SimLayer {
   }
 
   update(delta: number) {
+    this.scoreTime += delta;
     super.update(delta);
 
     if (this.player == null) {
@@ -39,7 +43,15 @@ export class GameLayer extends SimLayer {
         this.scoreboard = null;
       }
     } else {
-      this.scoreboard.text = "" + Math.floor(this.player.score);
+      if (this.player.score != this.lastScore) {
+        this.scoreTime = 0;
+        this.scoreboard.text = "" + Math.floor(this.player.score);
+        this.lastScore = this.player.score;
+      }
+      this.scoreboard.scale.x = this.scoreboard.scale.y = Math.max(
+        1,
+        1.5 - this.scoreTime
+      );
       this.scoreboard.position.set(
         app.renderer.width - this.scoreboard.width - 10,
         10

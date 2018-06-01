@@ -5,12 +5,14 @@ import { V, vpool, v0 } from "./math";
 import { randChoose } from "./help";
 import { Guppy } from "./entityguppy";
 import { Star } from "./entitystar";
+import { colorBg } from "./globals";
 
 const demoCenter = new V().set(200, 200);
 
 export class DemoLayer extends SimLayer {
   constructor() {
     super({ map: demoMapData, settSpawn: false, settFadeByDistance: false });
+    colorBg(260);
     this.adjustRooms(this.mapData.start);
     const allSpawns: Array<[Room, V]> = [];
     this.rooms.forEach((r, k) =>

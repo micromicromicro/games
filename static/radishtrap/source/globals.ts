@@ -14,13 +14,15 @@ export let app: PIXI.Application;
   });
 }
 const appBg = new pixi.Graphics();
-appBg.beginFill(hsv2rgb(260, 0.4, 0.2), 1);
-appBg.moveTo(-app.renderer.width, -app.renderer.height);
-appBg.lineTo(app.renderer.width, -app.renderer.height);
-appBg.lineTo(app.renderer.width, app.renderer.height);
-appBg.lineTo(-app.renderer.width, app.renderer.height);
-appBg.endFill();
 app.stage.addChild(appBg);
+export const colorBg = (a: number) => {
+  appBg.beginFill(hsv2rgb(a, 0.4, 0.2), 1);
+  appBg.moveTo(-app.renderer.width, -app.renderer.height);
+  appBg.lineTo(app.renderer.width, -app.renderer.height);
+  appBg.lineTo(app.renderer.width, app.renderer.height);
+  appBg.lineTo(-app.renderer.width, app.renderer.height);
+  appBg.endFill();
+};
 
 Array.prototype.forEach.call(
   document.getElementsByClassName("_view_tag"),

@@ -7,6 +7,7 @@ export type roomType = {
 
 export type mapType = {
   start: string;
+  endDist: string;
   rooms: {
     [s: string]: roomType;
   };

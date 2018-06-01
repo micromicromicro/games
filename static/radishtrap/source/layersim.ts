@@ -19,7 +19,7 @@ export abstract class Entity {
   }
 
   aiUpdate(context: SimLayer, now: number) {}
-  update(delta: number) {}
+  update(context: SimLayer, delta: number) {}
   postUpdate(delta: number) {}
 }
 
@@ -266,7 +266,7 @@ export abstract class SimLayer extends Layer {
       if (aiNext.aiNextUpdate != null) this.queueAiUpdate(aiNext);
     }
 
-    for (let e of this.entities) e.update(delta);
+    for (let e of this.entities) e.update(this, delta);
     this.phys.update(this, delta, 10);
     for (let e of this.entities) e.postUpdate(delta);
 

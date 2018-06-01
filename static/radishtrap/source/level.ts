@@ -1,6 +1,7 @@
 import { mapType } from "./maptype";
 export const map: mapType = {
   "start" : "0",
+  "end_dist" : "172",
   "rooms" : {
     "0" : {
       "distance" : 0,

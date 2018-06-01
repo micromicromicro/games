@@ -99,7 +99,7 @@ export class AIEntity extends Entity {
 
   lowUpdate() {}
 
-  update(delta: number) {
+  update(context: SimLayer, delta: number) {
     this.lowUpdateTime += delta;
     if (this.lowUpdateTime > 0.05) {
       this.lowUpdate();
