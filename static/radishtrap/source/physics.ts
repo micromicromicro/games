@@ -171,13 +171,6 @@ export class Physics<T> {
         e2r: number,
         out_edv: V
       ) => {
-        if (
-          Math.abs(e1pos.x - e2pos.x) + e1r + e2r >
-            Math.abs(e1evel.x - e2evel.x) ||
-          Math.abs(e1pos.y - e2pos.y) + e1r + e2r >
-            Math.abs(e1evel.y - e2evel.y)
-        )
-          return null;
         const edp = vpool.take();
         try {
           edp.setv(e2pos.c().sub(e1pos.c()));
@@ -235,25 +228,18 @@ export class Physics<T> {
           if (_seen != null) continue;
           seenECollPairs[phash] = 1;
 
-          if (
-            Math.abs(e1.position.x - e2.position.x) >
-              Math.abs(
-                e1.vel.x * deltaTime +
-                  e1.acc.x * atime -
-                  (e2.vel.x * deltaTime + e2.acc.x * atime)
-              ) +
-                e1.radius +
-                e2.radius ||
-            Math.abs(e1.position.y - e2.position.y) >
-              Math.abs(
-                e1.vel.y * deltaTime +
-                  e1.acc.y * atime -
-                  (e2.vel.y * deltaTime + e2.acc.y * atime)
-              ) +
-                e1.radius +
-                e2.radius
-          ) {
-            continue;
+          // Quick bounding box
+          {
+            const ev1 = e1.get_evel(deltaTime, atime);
+            const ev2 = e2.get_evel(deltaTime, atime);
+            if (
+              Math.abs(e1.position.x - e2.position.x) >
+                Math.abs(ev1.x - ev2.x) + e1.radius + e2.radius ||
+              Math.abs(e1.position.y - e2.position.y) >
+                Math.abs(ev1.y - ev2.y) + e1.radius + e2.radius
+            ) {
+              continue;
+            }
           }
 
           // Dynamic overlap
@@ -360,6 +346,47 @@ export class Physics<T> {
 
       const do_room_walls = (e1: PhysCirc<T>, room: PhysRoom<T>) => {
         for (let wall of room.walls) {
+          // Quick bounding box
+          {
+            const evel = e1.get_evel(deltaTime, atime);
+            let e1x;
+            let e2x;
+            if (evel.x < 0) {
+              e1x = e1.position.x + evel.x - e1.radius;
+              e2x = e1.position.x + e1.radius;
+            } else {
+              e1x = e1.position.x + e1.radius;
+              e2x = e1.position.x + evel.x - e1.radius;
+            }
+            let e1y;
+            let e2y;
+            if (evel.y < 0) {
+              e1y = e1.position.y + evel.y - e1.radius;
+              e2y = e1.position.y + e1.radius;
+            } else {
+              e1y = e1.position.y + e1.radius;
+              e2y = e1.position.y + evel.y - e1.radius;
+            }
+            let w1x;
+            let w2x;
+            if (wall.extent.x < 0) {
+              w1x = wall.start.x + wall.extent.x;
+              w2x = wall.start.x;
+            } else {
+              w1x = wall.start.x;
+              w2x = wall.start.x + wall.extent.x;
+            }
+            let w1y;
+            let w2y;
+            if (wall.extent.y < 0) {
+              w1y = wall.start.y + wall.extent.y;
+              w2y = wall.start.y;
+            } else {
+              w1y = wall.start.y;
+              w2y = wall.start.y + wall.extent.y;
+            }
+            if (e2x < w1x || e1x > w2x || e1y < w1y || e2y > w2y) continue;
+          }
           const cons_norm = wall.extent.c().norm();
           const trans_norm = wall.extent
             .c()
