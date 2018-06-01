@@ -355,8 +355,8 @@ export class Physics<T> {
               e1x = e1.position.x + evel.x - e1.radius;
               e2x = e1.position.x + e1.radius;
             } else {
-              e1x = e1.position.x + e1.radius;
-              e2x = e1.position.x + evel.x - e1.radius;
+              e1x = e1.position.x - e1.radius;
+              e2x = e1.position.x + evel.x + e1.radius;
             }
             let e1y;
             let e2y;
@@ -364,8 +364,8 @@ export class Physics<T> {
               e1y = e1.position.y + evel.y - e1.radius;
               e2y = e1.position.y + e1.radius;
             } else {
-              e1y = e1.position.y + e1.radius;
-              e2y = e1.position.y + evel.y - e1.radius;
+              e1y = e1.position.y - e1.radius;
+              e2y = e1.position.y + evel.y + e1.radius;
             }
             let w1x;
             let w2x;
@@ -385,7 +385,7 @@ export class Physics<T> {
               w1y = wall.start.y;
               w2y = wall.start.y + wall.extent.y;
             }
-            if (e2x < w1x || e1x > w2x || e1y < w1y || e2y > w2y) continue;
+            if (e2x < w1x || w2x < e1x || e2y < w1y || w2y < e1y) continue;
           }
           const cons_norm = wall.extent.c().norm();
           const trans_norm = wall.extent
