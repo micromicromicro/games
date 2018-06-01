@@ -22,6 +22,17 @@ export class PhysCirc<T> {
   listener: PhysEntityListener<T>;
   room: PhysRoom<T>;
   data: any;
+
+  evel: V = new V();
+  evel_dirty: boolean = true;
+  get_evel(deltaTime: number, atime: number) {
+    if (this.evel_dirty) {
+      this.evel.x = this.vel.x * deltaTime + this.acc.x * atime;
+      this.evel.y = this.vel.y * deltaTime + this.acc.y * atime;
+      this.evel_dirty = false;
+    }
+    return this.evel;
+  }
 }
 
 export class PhysWall {
@@ -94,12 +105,6 @@ export class Physics<T> {
 
   update(context: T, deltaTime: number, passes: number) {
     const atime = 0.5 * deltaTime * deltaTime;
-    const effective_vel = (v: V, a: V) => {
-      v.x = v.x * deltaTime + a.x * atime;
-      v.y = v.y * deltaTime + a.y * atime;
-      a.release();
-      return v;
-    };
     const collide_circle_line = ({
       cons_norm,
       trans_norm,
@@ -140,6 +145,13 @@ export class Physics<T> {
       out.trans_evel = trans_vel;
       return out;
     };
+
+    for (let [id, room] of this.rooms) {
+      for (let e1 of room.elements) {
+        e1.evel_dirty = true;
+      }
+    }
+
     const traversedDoors = new Set<String>();
     for (let iter = 0; iter < passes; ++iter) {
       let collided = false;
@@ -152,23 +164,24 @@ export class Physics<T> {
       };
       const collide_circles = (
         e1pos: V,
-        e1vel: V,
-        e1acc: V,
+        e1evel: V,
         e1r: number,
         e2pos: V,
-        e2vel: V,
-        e2acc: V,
+        e2evel: V,
         e2r: number,
         out_edv: V
       ) => {
+        if (
+          Math.abs(e1pos.x - e2pos.x) + e1r + e2r >
+            Math.abs(e1evel.x - e2evel.x) ||
+          Math.abs(e1pos.y - e2pos.y) + e1r + e2r >
+            Math.abs(e1evel.y - e2evel.y)
+        )
+          return null;
         const edp = vpool.take();
         try {
           edp.setv(e2pos.c().sub(e1pos.c()));
-          out_edv.setv(
-            effective_vel(e1vel.c(), e1acc.c()).sub(
-              effective_vel(e2vel.c(), e2acc.c())
-            )
-          );
+          out_edv.setv(e1evel.c().sub(e2evel.c()));
           const edv_len2 = out_edv.c().len2();
           if (edv_len2 < 0.00001) return null;
           const rs = e1r + e2r;
@@ -186,12 +199,6 @@ export class Physics<T> {
           if (time < 0) return null;
           return time;
         } finally {
-          e1pos.release();
-          e1vel.release();
-          e1acc.release();
-          e2pos.release();
-          e2vel.release();
-          e2acc.release();
           edp.release();
         }
       };
@@ -254,13 +261,11 @@ export class Physics<T> {
             const edv = vpool.take();
             try {
               const time = collide_circles(
-                e1.position.c(),
-                e1.vel.c(),
-                e1.acc.c(),
+                e1.position,
+                e1.get_evel(deltaTime, atime),
                 e1.radius,
-                e2.position.c(),
-                e2.vel.c(),
-                e2.acc.c(),
+                e2.position,
+                e2.get_evel(deltaTime, atime),
                 e2.radius,
                 edv
               );
@@ -270,14 +275,20 @@ export class Physics<T> {
               const sepnorm = vpool.take();
               try {
                 e1_at.setv(
-                  e1.position
-                    .c()
-                    .add(effective_vel(e1.vel.c(), e1.acc.c()).scale(time))
+                  e1.position.c().add(
+                    e1
+                      .get_evel(deltaTime, atime)
+                      .c()
+                      .scale(time)
+                  )
                 );
                 e2_at.setv(
-                  e2.position
-                    .c()
-                    .add(effective_vel(e2.vel.c(), e2.acc.c()).scale(time))
+                  e2.position.c().add(
+                    e2
+                      .get_evel(deltaTime, atime)
+                      .c()
+                      .scale(time)
+                  )
                 );
                 sepnorm.setv(
                   e2_at
@@ -296,6 +307,7 @@ export class Physics<T> {
                       sepnorm.c().scale(overlap * erest * e1portion / deltaTime)
                     )
                 );
+                e1.evel_dirty = true;
                 e2.vel.setv(
                   e2.vel
                     .c()
@@ -303,6 +315,7 @@ export class Physics<T> {
                       sepnorm.c().scale(overlap * erest * e2portion / deltaTime)
                     )
                 );
+                e2.evel_dirty = true;
                 if (e1.listener) e1.listener.handle(context, e2);
                 if (e2.listener) e2.listener.handle(context, e1);
               } finally {
@@ -355,37 +368,31 @@ export class Physics<T> {
           try {
             // Dynamic collide line
             do {
-              const evel = vpool.take();
-              try {
-                evel.setv(effective_vel(e1.vel.c(), e1.acc.c()));
-                const collision = collide_circle_line({
-                  cons_norm: cons_norm,
-                  trans_norm: trans_norm,
-                  e1pos: e1.position,
-                  e1evel: evel,
-                  e1r: e1.radius,
-                  ws: wall.start,
-                  we: wall.extent
-                });
-                if (collision == null) break;
-                collided = true;
-                e1.vel.setv(
-                  e1.vel
-                    .c()
-                    .sub(
-                      trans_norm
-                        .c()
-                        .scale(
-                          collision.trans_evel *
-                            (1 + e1.restitution) /
-                            deltaTime
-                        )
-                    )
-                );
-                if (e1.listener) e1.listener.handle(context, wall);
-              } finally {
-                evel.release();
-              }
+              const evel = e1.get_evel(deltaTime, atime);
+              const collision = collide_circle_line({
+                cons_norm: cons_norm,
+                trans_norm: trans_norm,
+                e1pos: e1.position,
+                e1evel: evel,
+                e1r: e1.radius,
+                ws: wall.start,
+                we: wall.extent
+              });
+              if (collision == null) break;
+              collided = true;
+              e1.vel.setv(
+                e1.vel
+                  .c()
+                  .sub(
+                    trans_norm
+                      .c()
+                      .scale(
+                        collision.trans_evel * (1 + e1.restitution) / deltaTime
+                      )
+                  )
+              );
+              e1.evel_dirty = true;
+              if (e1.listener) e1.listener.handle(context, wall);
             } while (false);
 
             // Dynamic collide corners
@@ -397,11 +404,9 @@ export class Physics<T> {
                 try {
                   const time = collide_circles(
                     e1.position.c(),
-                    e1.vel.c(),
-                    e1.acc.c(),
+                    e1.get_evel(deltaTime, atime),
                     e1.radius,
                     p.c(),
-                    v0.c(),
                     v0.c(),
                     0,
                     edv
@@ -426,6 +431,7 @@ export class Physics<T> {
                           .scale(overlap * (1 + e1.restitution) / deltaTime)
                       )
                   );
+                  e1.evel_dirty = true;
                   if (e1.listener) e1.listener.handle(context, wall);
                 } finally {
                   p.release();
@@ -526,7 +532,7 @@ export class Physics<T> {
               .c()
               .r90()
               .norm();
-            const e_vel = effective_vel(e1.vel.c(), e1.acc.c());
+            const e_vel = e1.get_evel(deltaTime, atime);
             try {
               const collision = collide_circle_line({
                 cons_norm: cons_norm,
@@ -549,7 +555,6 @@ export class Physics<T> {
             } finally {
               cons_norm.release();
               trans_norm.release();
-              e_vel.release();
             }
           }
         }
@@ -561,13 +566,10 @@ export class Physics<T> {
     // Update positions
     for (let [id, room] of this.rooms) {
       for (let e1 of room.elements) {
-        const e_vel = effective_vel(e1.vel.c(), e1.acc.c());
-        try {
-          e1.position.setv(e1.position.c().add(e_vel.c()));
-          e1.vel.setv(e1.vel.c().add(e1.acc.c().scale(deltaTime)));
-        } finally {
-          e_vel.release();
-        }
+        const e_vel = e1.get_evel(deltaTime, atime);
+        e1.position.setv(e1.position.c().add(e_vel.c()));
+        e1.vel.setv(e1.vel.c().add(e1.acc.c().scale(deltaTime)));
+        e1.evel_dirty = true;
       }
     }
   }
