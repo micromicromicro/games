@@ -23,6 +23,9 @@ for game in ['radishtrap']:
     shutil.copytree('{}/dist'.format(game), dest)
     source = '{}/source'.format(game)
     for extra in os.listdir(source):
-        if not extra.endswith(('.png', '.json')):
+        if extra.endswith((
+            '.ts',
+            '.html',
+        )):
             continue
         shutil.copy('{}/{}'.format(source, extra), dest)
