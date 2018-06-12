@@ -52,7 +52,8 @@ export class Room {
     this.phys.id = id;
     this.phys.data = this;
     if (data.spawns.length > 0) {
-      const distLabel = createText("" + (this.data.distance + 1), 28);
+      const showDistance = this.data.distance + 1;
+      const distLabel = createText("" + showDistance, 28);
       distLabel.alpha = 0.2;
       distLabel.position.set(
         data.spawns[0][0] - distLabel.width / 2,
@@ -60,12 +61,15 @@ export class Room {
       );
       this.graphics.addChild(distLabel);
 
-      this.distIndicator.lineStyle(1, hsv2rgb(0, 0, 1), 0.2);
-      this.distIndicator.arc(0, 0, 20, 0, 2 * Math.PI);
-      this.distIndicator.position.set(
-        data.spawns[0][0] - distLabel.width / 2,
-        data.spawns[0][1] - distLabel.height / 2
+      this.distIndicator.lineStyle(1, hsv2rgb(0, 0, 1), 0.15);
+      this.distIndicator.arc(
+        0,
+        0,
+        showDistance + 1 < 10 ? 15 : showDistance + 1 < 100 ? 20 : 25,
+        0,
+        2 * Math.PI
       );
+      this.distIndicator.position.set(data.spawns[0][0], data.spawns[0][1]);
       this.graphics.addChild(this.distIndicator);
     }
     this.graphics.addChild(this.lines);

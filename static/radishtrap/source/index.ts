@@ -325,7 +325,8 @@ const main = () => {
   addLayer(new TitleLayer(demoLayer));
 
   app.ticker.add((_: number) => {
-    for (let layer of layers) layer.update(app.ticker.elapsedMS / 1000);
+    const delta = Math.min(0.1, app.ticker.elapsedMS / 1000);
+    for (let layer of layers) layer.update(delta);
     //console.log(vpool.poolfree.length);
   });
 };

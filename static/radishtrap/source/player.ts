@@ -107,7 +107,7 @@ export class Player extends Entity {
       const changeLen = change.c().len();
       if (changeLen > 1) change = change.descale(changeLen);
       this.phys.acc.setv(this.phys.acc.c().add(change.c().scale(this.acc)));
-      g.rotation = Math.atan2(change.y, change.x);
+      this.graphics.rotation = Math.atan2(change.y, change.x);
     } finally {
       change.release();
     }
@@ -118,7 +118,6 @@ export class Player extends Entity {
 
   postUpdate(delta: number) {
     this.graphics.position.set(this.phys.position.x, this.phys.position.y);
-    rotateToPhys(this, this.graphics);
     this.graphics.alpha = 1 - this.distanceTime / this.maxDistanceTime;
   }
 }
