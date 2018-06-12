@@ -45,6 +45,7 @@ export class Room {
   phys: PhysRoom<SimLayer> = new PhysRoom<SimLayer>();
   graphics: pixi.Container = new pixi.Container();
   lines: pixi.Graphics = new pixi.Graphics();
+  distIndicator: pixi.Graphics = new pixi.Graphics();
 
   constructor(id: string, data: roomType) {
     this.data = data;
@@ -58,6 +59,14 @@ export class Room {
         data.spawns[0][1] - distLabel.height / 2
       );
       this.graphics.addChild(distLabel);
+
+      this.distIndicator.lineStyle(1, hsv2rgb(0, 0, 1), 0.2);
+      this.distIndicator.arc(0, 0, 20, 0, 2 * Math.PI);
+      this.distIndicator.position.set(
+        data.spawns[0][0] - distLabel.width / 2,
+        data.spawns[0][1] - distLabel.height / 2
+      );
+      this.graphics.addChild(this.distIndicator);
     }
     this.graphics.addChild(this.lines);
     this.lines.lineStyle(1, pixi.utils.rgb2hex([0.8, 0.4, 0.6]), 1);
@@ -221,6 +230,10 @@ export abstract class SimLayer extends Layer {
       if (this.settFadeByDistance)
         room.graphics.alpha = 1 - distance / walkDist;
       else room.graphics.alpha = 1;
+      const player = this.getPlayer();
+      if (room.data.distance <= this.getMaxDist()) {
+        room.distIndicator.visible = false;
+      }
       newRooms.set(id, room);
       if (distance >= walkDist) return;
       room.phys.doors.forEach(d => {
@@ -251,6 +264,7 @@ export abstract class SimLayer extends Layer {
   abstract createLife(r: Room, v: V);
   abstract center(): V;
   abstract getPlayer(): PhysCirc<SimLayer>;
+  abstract getMaxDist(): number;
   abstract clearPlayer();
 
   update(delta: number) {

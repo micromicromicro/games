@@ -46,4 +46,8 @@ export class DemoLayer extends SimLayer {
   }
 
   clearPlayer() {}
+
+  getMaxDist() {
+    return -1;
+  }
 }

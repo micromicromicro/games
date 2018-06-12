@@ -90,7 +90,7 @@ export class GameLayer extends SimLayer {
         (score -=
           20 *
           Math.pow(
-            Math.max(Math.cos((distance + 1.5) / 20 * 2 * Math.PI), 0),
+            Math.max(Math.cos(((distance + 1.5) / 20) * 2 * Math.PI), 0),
             2
           )) < 0
       ) {
@@ -139,5 +139,10 @@ export class GameLayer extends SimLayer {
 
   clearPlayer() {
     this.player = null;
+  }
+
+  getMaxDist() {
+    if (!this.player) return -1;
+    return this.player.distance;
   }
 }

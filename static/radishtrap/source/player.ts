@@ -34,6 +34,7 @@ export class Player extends Entity {
     this.phys = new PhysCirc();
     this.phys.mass = 50;
     this.phys.radius = 10;
+    this.phys.restitution = diff == 0 ? 1 : 0;
     const this1 = this;
     this.phys.listener = new class {
       handle(context: SimLayer, other: any): boolean {
@@ -52,7 +53,7 @@ export class Player extends Entity {
           this1.distanceTime = 0;
           const timeFactor =
             1 -
-            2 * Math.atan(this1.time / Math.max(1, this1.distance)) / Math.PI;
+            (2 * Math.atan(this1.time / Math.max(1, this1.distance))) / Math.PI;
           const distFactor = room.data.distance - this1.distance;
           const adding = room.data.distance * distFactor * timeFactor * 1000;
           this1.score += adding;
@@ -106,6 +107,7 @@ export class Player extends Entity {
       const changeLen = change.c().len();
       if (changeLen > 1) change = change.descale(changeLen);
       this.phys.acc.setv(this.phys.acc.c().add(change.c().scale(this.acc)));
+      g.rotation = Math.atan2(change.y, change.x);
     } finally {
       change.release();
     }
