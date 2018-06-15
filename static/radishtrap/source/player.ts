@@ -93,27 +93,29 @@ export class Player extends Entity {
       .add(key_up() ? vpool.take().set(0, -1) : v0)
       .add(key_down() ? vpool.take().set(0, 1) : v0);
     const minDim = Math.min(app.renderer.width, app.renderer.height) / 2;
-    for (let [id, t] of touches) {
-      const factor = vpool
-        .take()
-        .set(
-          -(app.renderer.width / 2 - t.x) / minDim,
-          -(app.renderer.height / 2 - t.y) / minDim
-        )
-        .norm();
-      change = change.add(factor);
+    if (touches.size > 0) {
+      for (let [id, t] of touches) {
+        const factor = vpool
+          .take()
+          .set(
+            -(app.renderer.width / 2 - t.x) / minDim,
+            -(app.renderer.height / 2 - t.y) / minDim
+          )
+          .norm();
+        change = change.add(factor);
+      }
+      try {
+        const changeLen = change.c().len();
+        if (changeLen > 1) change = change.descale(changeLen);
+        this.phys.acc.setv(this.phys.acc.c().add(change.c().scale(this.acc)));
+        this.graphics.rotation = Math.atan2(change.y, change.x);
+      } finally {
+        change.release();
+      }
+      const len = this.phys.vel.c().len();
+      if (len > this.maxSpeed)
+        this.phys.vel.setv(this.phys.vel.c().scale(this.maxSpeed / len));
     }
-    try {
-      const changeLen = change.c().len();
-      if (changeLen > 1) change = change.descale(changeLen);
-      this.phys.acc.setv(this.phys.acc.c().add(change.c().scale(this.acc)));
-      this.graphics.rotation = Math.atan2(change.y, change.x);
-    } finally {
-      change.release();
-    }
-    const len = this.phys.vel.c().len();
-    if (len > this.maxSpeed)
-      this.phys.vel.setv(this.phys.vel.c().scale(this.maxSpeed / len));
   }
 
   postUpdate(delta: number) {

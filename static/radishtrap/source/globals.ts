@@ -57,7 +57,7 @@ app.stage.on("pointerdown", (e: pixi.interaction.InteractionEvent) => {
       touches.delete(e.data.identifier);
       return;
     }
-  }
+  } else touches.clear();
   touches.set(e.data.identifier, new V().set(e.data.global.x, e.data.global.y));
 });
 app.stage.on("pointermove", (e: pixi.interaction.InteractionEvent) => {
