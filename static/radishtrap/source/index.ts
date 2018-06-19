@@ -141,7 +141,7 @@ class CoinLayer extends Layer {
     this.bg = bg;
     (async () => {
       try {
-        const ws: AsyncWebsockets = await myWs("ws://" + config.host + ":" config.port);
+        const ws: AsyncWebsockets = await myWs(config.host);
         ws.send({ game: "radish" });
         this.addrBody = (await ws.read()).address;
         const event = await ws.read();

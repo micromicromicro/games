@@ -15,15 +15,15 @@ for game in ['radishtrap']:
     shutil.rmtree('build', ignore_errors=True)
     shutil.copytree('source', 'build')
     with open('build/_config.ts', 'w') as config:
-        json.dump(dict(
-            host='https://api.development.micromicro.cash',
+        config.write('export const config = {};'.format(json.dumps(dict(
+            host='wss://backend.games.micromicro.cash:8080',
             port=29231
-        ), config)
+        ))))
     subprocess.check_call([
         './node_modules/.bin/parcel', 'build',
         '--no-source-maps',
         '--public-url', '.',
-        'source/index.html'
+        'build/index.html'
     ])
     os.chdir('..')
     dest = 'built/{}'.format(game)

@@ -1,4 +1,3 @@
 export const config = {
-  host: "localhost",
-  port: 29231
+  host: "ws://localhost:29231"
 };
