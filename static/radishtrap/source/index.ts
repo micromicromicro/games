@@ -2,7 +2,7 @@ import "babel-polyfill";
 import * as pixi from "pixi.js";
 
 import { myWs, AsyncWebsockets } from "./ws";
-import { imgElement as qrMicroImgElement } from "micromicroqr";
+import { imgElement as qrMicroImgElement } from "micromicro-standard-qr";
 import { Layer } from "./layer";
 import {
   app,

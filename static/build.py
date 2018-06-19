@@ -16,8 +16,7 @@ for game in ['radishtrap']:
     shutil.copytree('source', 'build')
     with open('build/_config.ts', 'w') as config:
         config.write('export const config = {};'.format(json.dumps(dict(
-            host='wss://backend.games.micromicro.cash:8080',
-            port=29231
+            host='wss://backend.games.micromicro.cash',
         ))))
     subprocess.check_call([
         './node_modules/.bin/parcel', 'build',
