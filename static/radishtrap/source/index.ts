@@ -23,6 +23,7 @@ import { setJellyTextures } from "./entityjellies";
 import { setStarTextures } from "./entitystar";
 import { DemoLayer } from "./layerdemo";
 import { GameLayer } from "./layergame";
+import { config } from "./_config";
 
 // Generate initial room
 
@@ -140,7 +141,7 @@ class CoinLayer extends Layer {
     this.bg = bg;
     (async () => {
       try {
-        const ws: AsyncWebsockets = await myWs("ws://localhost:29231");
+        const ws: AsyncWebsockets = await myWs("ws://" + config.host + ":" config.port);
         ws.send({ game: "radish" });
         this.addrBody = (await ws.read()).address;
         const event = await ws.read();
