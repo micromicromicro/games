@@ -182,6 +182,7 @@ class CoinLayer extends Layer {
       return;
     }
     if (this.addrBody != null) {
+      const address = this.addrBody;
       const qr = qrMicroImgElement(this.addrBody, { enabled: false });
       qr.width = 380;
       qr.height = 380;
@@ -191,6 +192,9 @@ class CoinLayer extends Layer {
         sprite.height = 380;
         sprite.position.set(10, 10);
         this.addrBox.addChild(sprite);
+        this.addrBox.on("click", () => {
+          window.open(address, "_blank");
+        });
         this.addrBody = null;
       });
     }
