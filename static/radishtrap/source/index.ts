@@ -162,6 +162,7 @@ class CoinLayer extends Layer {
     this.graphics.addChild(createButtons(["< Back", () => this.back()], null));
     const addrSize = 400;
     this.addrBox = new pixi.Container();
+    this.addrBox.interactive = true;
     this.addrBox.position.set(app.renderer.width / 2 - addrSize / 2, 140);
     const white = new pixi.Graphics();
     white.beginFill(rgb2num(1, 1, 1), 0.8);
