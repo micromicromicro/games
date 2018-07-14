@@ -5,6 +5,8 @@ import { V } from "./math";
 export const nocoin = document.location.hash == "#l1x4nl";
 
 export let app: PIXI.Application;
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
 {
   const body = document.getElementsByTagName("body").item(0);
   const ratio = body.clientWidth / body.clientHeight;
