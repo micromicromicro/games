@@ -193,7 +193,7 @@ class CoinLayer extends Layer {
         sprite.height = 380;
         sprite.position.set(10, 10);
         this.addrBox.addChild(sprite);
-        this.addrBox.on("click", () => {
+        this.addrBox.on("pointerup", () => {
           window.open(address, "_blank");
         });
         this.addrBody = null;
