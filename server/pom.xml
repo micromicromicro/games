@@ -106,6 +106,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <!--
                     <execution>
                         <id>coroutines-instrument-tests</id>
                         <phase>test-compile</phase>
@@ -123,6 +124,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    -->
                 </executions>
             </plugin>
             <plugin>

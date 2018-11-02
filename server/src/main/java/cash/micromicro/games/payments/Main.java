@@ -1,4 +1,6 @@
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableList;
 import com.zarbosoft.checkjson.Valid;
@@ -39,11 +41,14 @@ public class Main {
 	private static AtomicLong rate = new AtomicLong(100);
 	private static ScheduledXnioWorker worker;
 	private static ConcurrentHashMap<String, NotifyInfo> notify = new ConcurrentHashMap<>();
-	private static Map<String, GameInfo> games =
-			uncheck(() -> jackson.readValue(Main.class.getClassLoader().getResourceAsStream("games.json"),
-					jackson.getTypeFactory().constructParametricType(Map.class, String.class, GameInfo.class)
-			));
+	private static Map<String, GameInfo> games = uncheck(() -> {
+		JavaType infoType = jackson.getTypeFactory().constructParametricType(Map.class, String.class, GameInfo.class);
+		return jackson.readValue(Main.class
+				.getClassLoader()
+				.getResourceAsStream("cash/micromicro/games/payments/games.json"), infoType);
+	});
 
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class GameInfo {
 		@JsonProperty
 		public String name;
@@ -198,21 +203,24 @@ public class Main {
 					uncheck(() -> notifyInfo.channel.sendClose());
 				});
 				Cohelp.submit(worker.inner, () -> {
-					logger.info(
-							"Made payment: %s",
-							new Cogettus(
-									worker.inner,
+					logger.info("Made payment: %s",
+							new Cogettus(worker.inner,
 									GettusBase.formatURI("https://api.%s/v1/send", ENV_MICROMICRO_HOST)
-							).bodyJson(b -> {
-								b.writeStartObject();
-								b.writeStringField("username", ENV_MICROMICRO_USER);
-								b.writeStringField("token", ENV_MICROMICRO_TOKEN);
-								b.writeStringField("tos", "latest");
-								b.writeStringField("dest", notifyInfo.game.wallet);
-								b.writeNumberField("amount", data.get("amount").asLong());
-								b.writeStringField("sender_message", "Forward " + notifyInfo.game.name);
-								b.writeEndObject();
-							}).send().body().check().text()
+							)
+									.bodyJson(b -> {
+										b.writeStartObject();
+										b.writeStringField("username", ENV_MICROMICRO_USER);
+										b.writeStringField("token", ENV_MICROMICRO_TOKEN);
+										b.writeStringField("tos", "latest");
+										b.writeStringField("dest", notifyInfo.game.wallet);
+										b.writeNumberField("amount", data.get("amount").asLong());
+										b.writeStringField("sender_message", "Forward " + notifyInfo.game.name);
+										b.writeEndObject();
+									})
+									.send()
+									.body()
+									.check()
+									.text()
 					);
 				});
 			} while (false);

@@ -175,17 +175,31 @@ body {
 		<span id="copyright">Copyright 2018 Micromicro LLC</span>
 	</body>
 	<script module>
-		l = window.location
+		const shuffle = a => {
+			let j
+			let x
+			for (let i = a.length - 1; i > 0; i--) {
+				j = Math.floor(Math.random() * (i + 1))
+				x = a[i]
+				a[i] = a[j]
+				a[j] = x
+			}
+			return a
+		}
 
-		datauri = l.protocol + '//' + l.host + l.pathname.split(/\/[^\/]+$/)[0] + '/games.json'
+		const l = window.location
+
+		const datauri = l.protocol + '//' + l.host + l.pathname.split(/\/[^\/]*$/)[0] + '/games.json'
 
 		const xhr = new XMLHttpRequest()
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState !== 4) return
 			const data = JSON.parse(xhr.responseText)
+			const gameids = Object.keys(data)
+			shuffle(gameids)
 			;[].forEach.call(document.getElementsByClassName('section'), section => {
 				const sname = section.getAttribute('@data-section')
-				Object.keys(data).forEach(gameid => {
+				gameids.forEach(gameid => {
 					const gamedata = data[gameid]
 					if (gamedata.section !== sname) return
 					const game = document.createElement('a')
