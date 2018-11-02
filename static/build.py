@@ -6,7 +6,7 @@ import shutil
 import json
 
 shutil.rmtree('built', ignore_errors=True)
-os.makedirs('built', exist_ok=True)
+shutil.copytree('root', 'built')
 
 for game in ['radishtrap']:
     os.chdir(game)
