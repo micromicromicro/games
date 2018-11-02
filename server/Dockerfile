@@ -1,6 +1,3 @@
-from node:9.11.1-alpine
-add . .
-run npm install
-cmd ["node", "source/index.js"]
-expose 8080
-env PORT=8080
+FROM mm_local_java
+ADD main.jar .
+CMD java -jar main.jar

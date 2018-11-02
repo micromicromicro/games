@@ -1,0 +1,10 @@
+{
+	"radishtrap": {
+		"name": "Radish Trap",
+		"icon": "../built/radishtrap/android-chrome-384x384.png",
+		"url": "https://games.micromicro.cash/radishtrap/",
+		"price": 10,
+		"wallet": "BX3EvtktgAM=",
+		"section": "techdemos"
+	}
+}
