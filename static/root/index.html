@@ -105,6 +105,15 @@ body {
 	align-content: flex-start;
 }
 
+.section {
+	min-height: 8em;
+}
+
+.section > h2 {
+	font-size: 2em;
+	margin: 0.2em;
+}
+
 .game {
 	max-width: 6cm;
 	width: 100%;
@@ -167,8 +176,12 @@ body {
 			</div>
 
 			<div id="games">
-				<div class="section" @data-section="coinopcontest1"></div>
-				<div class="section" @data-section="techdemos"></div>
+				<div class="section" @data-section="coinopcontest1">
+					<h2>Coin-op Contest 1</h2>
+				</div>
+				<div class="section" @data-section="techdemos">
+					<h2>Tech Demos</h2>
+				</div>
 			</div>
 		</div>
 
